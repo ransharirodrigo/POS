@@ -38,7 +38,6 @@
                             <label class="form-label">@lang('messages.staff.role') *</label>
                             <select name="role" class="form-select" required>
                                 <option value="">Select Role</option>
-                                <option value="super admin">@lang('messages.staff.roles.super admin')</option>
                                 <option value="manager">@lang('messages.staff.roles.manager')</option>
                                 <option value="cashier">@lang('messages.staff.roles.cashier')</option>
                             </select>
