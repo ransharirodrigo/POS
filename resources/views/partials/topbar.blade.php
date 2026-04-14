@@ -7,8 +7,8 @@
     </div>
     <div class="user-dropdown">
         <div class="user-dropdown-toggle d-flex align-items-center gap-2" onclick="document.getElementById('logoutForm').submit()" style="cursor: pointer;">
-            <div class="user-avatar">@php echo strtoupper(substr(Auth::user()->first_name, 0, 1) . substr(Auth::user()->last_name, 0, 1)); @endphp</div>
-            <span>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
+            <div class="user-avatar">{{ strtoupper(Auth::user()->fullName[0] . substr(Auth::user()->fullName, strpos(Auth::user()->fullName, ' ') + 1, 1)) }}</div>
+            <span>{{ Auth::user()->fullName }}</span>
             <i class="bi bi-box-arrow-right"></i>
         </div>
         <form id="logoutForm" method="POST" action="{{ route('logout') }}">
