@@ -37,7 +37,7 @@
                         <tbody>
                             @forelse($employees as $key => $employee)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $employees->firstItem() + $key }}</td>
                                     <td>{{ $employee->first_name }}</td>
                                     <td>{{ $employee->last_name }}</td>
                                     <td>{{ $employee->username }}</td>
@@ -70,6 +70,7 @@
                             @endforelse
                         </tbody>
                     </table>
+                    {{ $employees->links() }}
                 </div>
             </div>
         </div>
