@@ -6,9 +6,11 @@ use App\Http\Controllers\LoginController;
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     if (Auth::check()) {
+         Log::info('checked ');
         return redirect('/dashboard');
     }
     return redirect('/login');
