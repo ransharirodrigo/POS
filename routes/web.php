@@ -1,25 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\LoginController;
-
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-
-Route::get('/', function () {
-    if (Auth::check()) {
-         Log::info('checked ');
-        return redirect('/dashboard');
-    }
-    return redirect('/login');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
-
+use App\Http\Controllers\DashboardController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -27,5 +10,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
