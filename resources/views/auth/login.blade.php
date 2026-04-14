@@ -13,31 +13,31 @@
                 <div class="card shadow-lg border-0">
                     <div class="card-header" style="background: #357960; color: #fff; text-align: center;">
                         <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80" alt="Textile Shop" class="img-fluid rounded mb-2" style="max-height: 120px;">
-                        <h3 class="mb-0">Textile Shop Login</h3>
-                        <small style="color: #e6f4ea;">Welcome! Please sign in to continue.</small>
+                        <h3 class="mb-0">@lang('messages.login.title')</h3>
+                        <small style="color: #e6f4ea;">@lang('messages.login.welcome')</small>
                     </div>
                     <div class="card-body p-4">
                         <form method="POST" action="/login">
                             @csrf
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
+                                <label for="username" class="form-label">@lang('messages.login.username')</label>
                                 <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required autofocus>
                                 @error('username')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
+                                <label for="password" class="form-label">@lang('messages.login.password')</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                                 @error('password')
                                     <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <button type="submit" class="btn w-100" style="background: #357960; color: #fff;">Login</button>
+                            <button type="submit" class="btn w-100" style="background: #357960; color: #fff;">@lang('messages.login.button')</button>
                         </form>
                     </div>
                     <div class="card-footer text-center bg-white border-0">
-                        <small class="text-muted">&copy; {{ date('Y') }} Textile Shop. All rights reserved.</small>
+                        <small class="text-muted">&copy; {{ date('Y') }} @lang('messages.login.footer')</small>
                     </div>
                 </div>
             </div>

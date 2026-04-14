@@ -24,13 +24,13 @@ class LoginController extends Controller
 
         if (!$employee || !password_verify($credentials['password'], $employee->password)) {
             return back()->withErrors([
-                'username' => 'The provided credentials do not match our records.',
+                'username' => __('messages.auth.failed'),
             ])->onlyInput('username');
         }
 
         if (!$employee->is_active) {
             return back()->withErrors([
-                'username' => 'Your account is inactive.',
+                'username' => __('messages.auth.inactive'),
             ])->onlyInput('username');
         }
 
