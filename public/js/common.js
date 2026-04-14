@@ -7,3 +7,76 @@ function closeSidebar() {
     document.getElementById('sidebar').classList.remove('show');
     document.querySelector('.overlay').classList.remove('show');
 }
+
+function showAlert(type, message, title = '') {
+    if (typeof Swal !== 'undefined') {
+        const options = {
+            text: message,
+            icon: type,
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        };
+        if (title) {
+            options.title = title;
+        }
+        Swal.fire(options);
+    }
+}
+
+function showDeleteConfirm(title, message, onConfirm) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed && typeof onConfirm === 'function') {
+                onConfirm();
+            }
+        });
+    }
+}
+
+function deleteStaff(id, name) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Confirm Delete',
+            text: 'Are you sure you want to delete ' + name + '? This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const body = document.body;
+    if (body.dataset.success) {
+        showAlert('success', body.dataset.success, 'Success');
+    }
+    if (body.dataset.error) {
+        showAlert('error', body.dataset.error, 'Error');
+    }
+    if (body.dataset.warning) {
+        showAlert('warning', body.dataset.warning, 'Warning');
+    }
+    if (body.dataset.errors) {
+        const errors = JSON.parse(body.dataset.errors);
+        errors.forEach(function(error) {
+            showAlert('error', error, 'Error');
+        });
+    }
+});
