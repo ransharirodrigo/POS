@@ -13,12 +13,16 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
-    Route::get('/staff/create', [StaffController::class, 'create'])->name('staff.create');
-    Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
-    Route::put('/staff/{employee}', [StaffController::class, 'update'])->name('staff.update');
-    Route::delete('/staff/{employee}', [StaffController::class, 'destroy'])->name('staff.destroy');
+
+    Route::middleware('super.admin')->group(function () {
+        Route::prefix('staff')->group(function () {
+            Route::get('/', [StaffController::class, 'index'])->name('staff.index');
+            Route::get('/create', [StaffController::class, 'create'])->name('staff.create');
+            Route::post('/', [StaffController::class, 'store'])->name('staff.store');
+            Route::put('/{employee}', [StaffController::class, 'update'])->name('staff.update');
+            Route::delete('/{employee}', [StaffController::class, 'destroy'])->name('staff.destroy');
+        });
+    });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

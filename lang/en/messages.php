@@ -4,6 +4,7 @@ return [
     'common' => [
         'app_name' => 'Textile Shop',
         'all_rights_reserved' => 'Textile Shop. All rights reserved.',
+        'unauthorized' => 'You are not authorized to perform this action.',
     ],
     'login' => [
         'title' => 'Textile Shop Login',
