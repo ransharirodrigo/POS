@@ -38,7 +38,7 @@
                                     <td>{{ $sale->created_at->format('d-m-Y H:i') }}</td>
                                     <td>{{ str_pad($sale->id, 6, '0', STR_PAD_LEFT) }}</td>
                                     <td>{{ $sale->staff->fullName ?? '-' }}</td>
-                                    <td>{{ $sale->customer->name ?? '-' }}</td>
+                                    <td>{{ $sale->customer->name ?? 'Walk-in Customer' }}</td>
                                     <td>{{ number_format($sale->total, 2) }}</td>
                                     <td>
                                         <span class="badge bg-info">{{ ucfirst($sale->payment_method) }}</span>
@@ -64,6 +64,10 @@
             </div>
         </div>
     </div>
+
+    @foreach($sales as $sale)
+        @include('sales.partials.view-modal', ['sale' => $sale])
+    @endforeach
 </div>
 
 @endsection
