@@ -7,6 +7,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SaleController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -48,6 +49,15 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [CustomerController::class, 'store'])->name('customers.store')->middleware('permission:customer add|customer manage');
         Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update')->middleware('permission:customer update|customer manage');
         Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy')->middleware('permission:customer delete|customer manage');
+    });
+
+    Route::prefix('pos')->group(function () {
+        Route::get('/', [SaleController::class, 'pos'])->name('pos.index');
+    });
+
+    Route::prefix('sales')->group(function () {
+        Route::get('/', [SaleController::class, 'index'])->name('sales.index');
+        Route::post('/', [SaleController::class, 'store'])->name('sales.store');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
