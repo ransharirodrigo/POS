@@ -23,4 +23,9 @@ class Customer extends Model
             'is_active' => 'boolean',
         ];
     }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class, 'customer_id');
+    }
 }

@@ -148,6 +148,7 @@ return [
         'created' => 'Customer created successfully.',
         'updated' => 'Customer updated successfully.',
         'deleted' => 'Customer deleted successfully.',
+        'cannot_delete' => 'Cannot delete customer with existing sales.',
         'confirm_delete_title' => 'Confirm Delete',
         'confirm_delete_message' => 'Are you sure you want to delete :name? This action cannot be undone.',
         'no_customers' => 'No customers found.',
