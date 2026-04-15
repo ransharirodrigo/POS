@@ -33,7 +33,7 @@ class StaffController extends Controller
             'password' => 'required|string|max:75',
         ]);
 
-        Employee::create([
+        $employee = Employee::create([
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'username' => $validated['username'],
@@ -42,6 +42,8 @@ class StaffController extends Controller
             'password' => Hash::make($validated['password']),
             'is_active' => true,
         ]);
+
+        $employee->assignRole($validated['role']);
 
         return redirect()->route('staff.index')->with('success', __('messages.staff.created'));
     }
@@ -67,6 +69,7 @@ class StaffController extends Controller
 
         if ($request->filled('role')) {
             $data['role'] = $validated['role'];
+            $employee->syncRoles($validated['role']);
         }
 
         $employee->update($data);
