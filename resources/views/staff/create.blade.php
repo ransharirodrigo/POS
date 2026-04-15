@@ -20,35 +20,40 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.staff.first_name') *</label>
-                            <input type="text" name="first_name" class="form-control" required>
+                            <input type="text" name="first_name" class="form-control" required value="{{ old('first_name') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.staff.last_name') *</label>
-                            <input type="text" name="last_name" class="form-control" required>
+                            <input type="text" name="last_name" class="form-control" required value="{{ old('last_name') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.staff.username') *</label>
-                            <input type="text" name="username" class="form-control" required>
+                            <input type="text" name="username" class="form-control" required value="{{ old('username') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.staff.phone') *</label>
-                            <input type="text" name="phone" class="form-control" maxlength="10" required>
+                            <input type="text" name="phone" class="form-control" maxlength="10" required value="{{ old('phone') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.staff.role') *</label>
                             <select name="role" class="form-select" required>
                                 <option value="">Select Role</option>
-                                <option value="manager">@lang('messages.staff.roles.manager')</option>
-                                <option value="cashier">@lang('messages.staff.roles.cashier')</option>
+                                <option value="manager" {{ old('role') == 'manager' ? 'selected' : '' }}>@lang('messages.staff.roles.manager')</option>
+                                <option value="cashier" {{ old('role') == 'cashier' ? 'selected' : '' }}>@lang('messages.staff.roles.cashier')</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.staff.password') *</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" required>
+                                <button type="button" class="btn btn-outline-secondary toggle-password" onclick="togglePassword(this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="col-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" checked>
+                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {{ old('is_active', true) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_active">@lang('messages.staff.is_active')</label>
                             </div>
                         </div>

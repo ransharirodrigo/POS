@@ -37,4 +37,9 @@ class Employee extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

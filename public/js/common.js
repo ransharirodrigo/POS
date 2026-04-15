@@ -50,6 +50,20 @@ function confirmDelete(id, name) {
     });
 }
 
+function togglePassword(button) {
+    const input = button.closest('.input-group').querySelector('input');
+    const icon = button.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const body = document.body;
     if (body.dataset.success) {
