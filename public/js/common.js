@@ -81,4 +81,77 @@ document.addEventListener('DOMContentLoaded', function() {
             showAlert('error', error, 'Error');
         });
     }
+
+    document.querySelectorAll('[id^="createCustomerForm"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const errorDiv = document.getElementById('createFormErrors');
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.errors) {
+                    errorDiv.innerHTML = Object.values(data.errors).flat().join('<br>');
+                    errorDiv.classList.remove('d-none');
+                } else if (data.success) {
+                    errorDiv.classList.add('d-none');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+                    modal.hide();
+                    this.reset();
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        const modal = document.getElementById('createModal');
+        if (modal) {
+            modal.addEventListener('hidden.bs.modal', function() {
+                form.reset();
+                const errorDiv = document.getElementById('createFormErrors');
+                if (errorDiv) errorDiv.classList.add('d-none');
+            });
+        }
+    });
+
+    document.querySelectorAll('[id^="editCustomerForm"]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const customerId = this.id.replace('editCustomerForm', '');
+            const errorDiv = document.getElementById('editFormErrors' + customerId);
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.errors) {
+                    errorDiv.innerHTML = Object.values(data.errors).flat().join('<br>');
+                    errorDiv.classList.remove('d-none');
+                } else if (data.success) {
+                    errorDiv.classList.add('d-none');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editModal' + customerId));
+                    modal.hide();
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
 });

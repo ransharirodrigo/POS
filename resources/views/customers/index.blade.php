@@ -59,7 +59,7 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $customer->id }}, '{{ $customer->name }}')">
+                                        <button type="button" class="btn btn-sm btn-danger" data-name='{{ $customer->name }}' onclick="confirmDelete({{ $customer->id }}, this.dataset.name)">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                         @endcanany

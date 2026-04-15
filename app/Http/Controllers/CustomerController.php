@@ -7,14 +7,16 @@ use App\Http\Controllers\Traits\HasSalesCheck;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
     use HasSalesCheck;
+
     public function index()
     {
         Gate::authorize('customer view');
-        
+
         $customers = Customer::orderBy('id', 'desc')->paginate(10);
         return view('customers.index', compact('customers'));
     }
@@ -23,12 +25,27 @@ class CustomerController extends Controller
     {
         Gate::authorize('customer add');
 
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'phone' => 'required|string|max:20|unique:customers,phone',
         ]);
 
-        Customer::create($validated);
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        Customer::create([
+            'name' => $validator->validated()['name'],
+            'phone' => $validator->validated()['phone'],
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => __('messages.customers.created')]);
+        }
 
         return redirect()->route('customers.index')->with('success', __('messages.customers.created'));
     }
@@ -37,12 +54,27 @@ class CustomerController extends Controller
     {
         Gate::authorize('customer update');
 
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'phone' => 'required|string|max:20|unique:customers,phone,' . $customer->id,
         ]);
 
-        $customer->update($validated);
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $customer->update([
+            'name' => $validator->validated()['name'],
+            'phone' => $validator->validated()['phone'],
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => __('messages.customers.updated')]);
+        }
 
         return redirect()->route('customers.index')->with('success', __('messages.customers.updated'));
     }
