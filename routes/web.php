@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\ReportController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -58,6 +59,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('sales')->group(function () {
         Route::get('/', [SaleController::class, 'index'])->name('sales.index');
         Route::post('/', [SaleController::class, 'store'])->name('sales.store');
+    });
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/sales', [ReportController::class, 'salesSummary'])->name('reports.sales');
+        Route::get('/top-products', [ReportController::class, 'topProducts'])->name('reports.top-products');
+        Route::get('/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

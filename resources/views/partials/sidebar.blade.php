@@ -21,7 +21,7 @@
         <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><i class="bi bi-receipt"></i> @lang('messages.nav.sales')</a>
         @endcanany
         @can('view reports')
-        <a href="#"><i class="bi bi-graph-up"></i> @lang('messages.nav.reports')</a>
+        <a href="{{ route('reports.index') }}" class="{{ request()->routeIs('reports.*') ? 'active' : '' }}"><i class="bi bi-graph-up"></i> @lang('messages.nav.reports')</a>
         @endcan
     </div>
 </nav>
