@@ -45,10 +45,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('customers')->group(function () {
-        Route::get('/', [CustomerController::class, 'index'])->name('customers.index')->middleware('permission:customer view|customer manage');
-        Route::post('/', [CustomerController::class, 'store'])->name('customers.store')->middleware('permission:customer add|customer manage');
-        Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update')->middleware('permission:customer update|customer manage');
-        Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy')->middleware('permission:customer delete|customer manage');
+        Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+        Route::post('/', [CustomerController::class, 'store'])->name('customers.store');
+        Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+        Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
     });
 
     Route::prefix('pos')->group(function () {

@@ -10,17 +10,21 @@ use App\Models\Customer;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class SaleController extends Controller
 {
     public function index()
     {
+        Gate::authorize('view sales');
+        
         $sales = Sale::with(['staff', 'customer', 'items'])->orderBy('id', 'desc')->paginate(15);
         return view('sales.index', compact('sales'));
     }
 
     public function pos()
     {
+        Gate::authorize('manage sales');
 
         $products = Product::with(['category', 'variants'])
             ->where('is_active', true)
@@ -44,6 +48,8 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('manage sales');
+
         try {
             $validated = $request->validate([
                 'staff_id' => 'required|exists:employees,id',

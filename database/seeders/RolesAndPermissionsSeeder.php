@@ -16,8 +16,14 @@ class RolesAndPermissionsSeeder extends Seeder
         $permissions = [
             'manage users',
             'manage sales',
+            'view sales',
             'view reports',
             'process payments',
+            'staff manage',
+            'staff add',
+            'staff update',
+            'staff delete',
+            'staff view',
             'category manage',
             'category add',
             'category update',
@@ -42,9 +48,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $superAdmin->givePermissionTo(Permission::all());
 
         $manager = Role::firstOrCreate(['name' => 'manager']);
-        $manager->givePermissionTo(['manage sales', 'view reports', 'category manage', 'category add', 'category update', 'category delete', 'category view', 'customer manage', 'customer add', 'customer update', 'customer delete', 'customer view']);
+        $manager->givePermissionTo(['manage sales', 'view sales', 'view reports', 'staff view', 'category manage', 'category add', 'category update', 'category delete', 'category view', 'product manage', 'product add', 'product update', 'product view', 'customer manage', 'customer add', 'customer update', 'customer delete', 'customer view']);
 
         $cashier = Role::firstOrCreate(['name' => 'cashier']);
-        $cashier->givePermissionTo(['manage sales', 'process payments', 'category view', 'customer add', 'customer view']);
+        $cashier->givePermissionTo(['manage sales', 'view sales', 'process payments', 'category view', 'product view', 'customer add', 'customer view']);
     }
 }
