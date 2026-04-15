@@ -38,7 +38,7 @@
 
                 <div class="border-top pt-3 mb-3">
                     <label class="form-label fw-semibold">@lang('messages.pos.cart_items')</label>
-                    <div id="cartItems" class="cart-items-container shadow-sm">
+                    <div id="cartItems" class="cart-items-container shadow-sm" style="max-height: 200px; overflow-y: auto;">
                         <p class="text-muted text-center py-4"><i class="bi bi-cart-x fs-1 d-block mb-2"></i>@lang('messages.pos.no_items')</p>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
         </div>
 
         <div class="col-lg-8">
-            <div class="stat-card rounded-3">
+            <div class="stat-card rounded-3" style="max-height: calc(100vh - 80px); overflow-y: auto;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam me-2"></i>@lang('messages.pos.products')</h5>
                     <select id="categoryFilter" class="form-select form-select-sm rounded-2" style="width: 150px;">

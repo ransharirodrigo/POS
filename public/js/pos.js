@@ -1,10 +1,10 @@
-function renderProducts(filteredProducts = products) {
+function renderProducts() {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
     
     const categoryFilter = document.getElementById('categoryFilter')?.value;
     
-    let filtered = filteredProducts;
+    let filtered = products;
     if (categoryFilter) {
         filtered = filtered.filter(p => p.category_id == categoryFilter);
     }
@@ -47,26 +47,60 @@ function showVariants(productId) {
         return;
     }
     
-    const variantOptions = availableVariants.map((v) => {
+    const productImage = product.image ? `/storage/${product.image}` : null;
+    let html = `
+        <div class="variant-modal-header mb-3 p-3 bg-light rounded-3">
+            <div class="d-flex align-items-center gap-3">
+                ${productImage ? `<img src="${productImage}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">` : '<div style="width: 60px; height: 60px; background: #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class="bi bi-image text-muted fs-4"></i></div>'}
+                <div>
+                    <h6 class="mb-1 fw-bold">${product.name}</h6>
+                    <small class="text-muted">${availableVariants.length} variants available</small>
+                </div>
+            </div>
+        </div>
+        <div class="variant-list" style="max-height: 280px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 8px;">
+    `;
+    
+    availableVariants.forEach((v, idx) => {
         const originalIndex = product.variants.indexOf(v);
-        return {
-            text: (v.size || '') + ' ' + (v.color || '') + ' - Rs. ' + parseFloat(v.price).toFixed(2) + ' (Stock: ' + v.quantity + ')',
-            value: originalIndex
-        };
+        const colorHex = getColorHex(v.color);
+        html += `
+            <label class="d-flex align-items-center p-3 border-bottom variant-item" style="cursor:pointer; transition: background 0.2s;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='white'">
+                <input type="radio" name="variantSelect" value="${originalIndex}" class="me-3" style="width: 18px; height: 18px; accent-color: #357960;">
+                <div class="d-flex align-items-center flex-grow-1 justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        ${colorHex ? `<span style="width: 24px; height: 24px; background: ${colorHex}; border-radius: 4px; border: 1px solid #dee2e6;"></span>` : ''}
+                        <div>
+                            <strong>${v.size || 'One Size'}</strong>
+                            ${v.color ? `<span class="text-muted ms-1">${v.color}</span>` : ''}
+                        </div>
+                    </div>
+                    <span class="badge" style="background: ${v.quantity <= 5 ? '#ffc107' : '#198754'}; color: ${v.quantity <= 5 ? '#000' : '#fff'};">${v.quantity} in stock</span>
+                </div>
+            </label>
+        `;
     });
+    html += '</div>';
     
     Swal.fire({
         title: 'Select Variant',
-        text: product.name,
-        input: 'radio',
-        inputOptions: Object.fromEntries(variantOptions.map(v => [v.value, v.text])),
-        inputValidator: (value) => {
-            if (!value) return 'Please select a variant';
-            return null;
-        },
-        confirmButtonText: 'Add to Cart',
+        html: html,
         showCancelButton: true,
-        cancelButtonText: 'Cancel'
+        confirmButtonText: '<i class="bi bi-cart-plus me-1"></i> Add to Cart',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#357960',
+        customClass: {
+            confirmButton: 'rounded-2',
+            cancelButton: 'rounded-2'
+        },
+        preConfirm: () => {
+            const selected = document.querySelector('input[name="variantSelect"]:checked');
+            if (!selected) {
+                Swal.showValidationMessage('Please select a variant');
+                return false;
+            }
+            return selected.value;
+        }
     }).then((result) => {
         if (result.isConfirmed) {
             const idx = parseInt(result.value);
@@ -75,6 +109,19 @@ function showVariants(productId) {
             addToCart(product.id, variant.id, variant.price, product.name, (variant.size || '') + ' ' + (variant.color || ''), costPrice);
         }
     });
+}
+
+function getColorHex(colorName) {
+    if (!colorName) return null;
+    const colors = {
+        'red': '#dc3545', 'blue': '#0d6efd', 'black': '#212529', 'white': '#f8f9fa',
+        'green': '#198754', 'yellow': '#ffc107', 'orange': '#fd7e14', 'purple': '#6f42c1',
+        'pink': '#d63384', 'gray': '#6c757d', 'grey': '#6c757d', 'navy': '#001f3f',
+        'brown': '#795548', 'cream': '#fffdd0', 'beige': '#f5f5dc', 'maroon': '#800000',
+        'olive': '#808000', 'teal': '#008080', 'cyan': '#0dcaf0', 'gold': '#ffd700',
+        'silver': '#c0c0c0', 'magenta': '#ff00ff', 'lime': '#32cd32', 'aqua': '#00ffff'
+    };
+    return colors[colorName.toLowerCase()] || null;
 }
 
 function addToCart(productId, variantId, unitPrice, productName, variantName, costPrice) {
