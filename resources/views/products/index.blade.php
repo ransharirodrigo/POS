@@ -63,7 +63,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-info me-1" data-bs-toggle="modal" data-bs-target="#viewModal{{ $product->id }}">
+                                        <button type="button" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#viewModal{{ $product->id }}">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                         <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary me-1">

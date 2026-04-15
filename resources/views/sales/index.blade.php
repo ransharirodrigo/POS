@@ -44,7 +44,7 @@
                                         <span class="badge bg-info">{{ ucfirst($sale->payment_method) }}</span>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewModal{{ $sale->id }}">
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#viewModal{{ $sale->id }}">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </td>
