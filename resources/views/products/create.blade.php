@@ -20,28 +20,28 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.name') *</label>
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.sku') *</label>
-                            <input type="text" name="sku" class="form-control" required>
+                            <input type="text" name="sku" class="form-control" value="{{ old('sku') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.base_price') *</label>
-                            <input type="number" name="base_price" class="form-control" step="0.01" required>
+                            <input type="number" name="base_price" class="form-control" value="{{ old('base_price') }}" step="0.01" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.category')</label>
                             <select name="category_id" class="form-select">
                                 <option value="">-- Select Category --</option>
                                 @foreach(\App\Models\Category::where('is_active', true)->get() as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-12">
                             <label class="form-label">@lang('messages.products.description')</label>
-                            <textarea name="description" class="form-control" rows="3"></textarea>
+                            <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
                         </div>
                         <div class="col-12">
                             <label class="form-label">@lang('messages.products.image')</label>
@@ -60,18 +60,18 @@
                                         <select name="variants[0][size]" class="form-select" required>
                                             <option value="">-- Select Size --</option>
                                             @foreach($sizes as $size)
-                                                <option value="{{ $size }}">{{ $size }}</option>
+                                                <option value="{{ $size }}" {{ old('variants.0.size') == $size ? 'selected' : '' }}>{{ $size }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" name="variants[0][color]" class="form-control" placeholder="Color (e.g., Red, Blue)" required>
+                                        <input type="text" name="variants[0][color]" class="form-control" value="{{ old('variants.0.color') }}" placeholder="Color (e.g., Red, Blue)" required>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" name="variants[0][sku]" class="form-control" placeholder="Variant SKU" required>
+                                        <input type="text" name="variants[0][sku]" class="form-control" value="{{ old('variants.0.sku') }}" placeholder="Variant SKU" required>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="number" name="variants[0][quantity]" class="form-control" placeholder="Quantity" min="0" required>
+                                        <input type="number" name="variants[0][quantity]" class="form-control" value="{{ old('variants.0.quantity') }}" placeholder="Quantity" min="0" required>
                                     </div>
                                     <div class="col-md-1">
                                         <button type="button" class="btn btn-danger remove-variant" disabled>
@@ -87,7 +87,7 @@
 
                         <div class="col-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" checked>
+                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {{ old('is_active', true) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_active">@lang('messages.products.is_active')</label>
                             </div>
                         </div>

@@ -21,28 +21,28 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.name') *</label>
-                            <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
+                            <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.sku') *</label>
-                            <input type="text" name="sku" class="form-control" value="{{ $product->sku }}" required>
+                            <input type="text" name="sku" class="form-control" value="{{ old('sku', $product->sku) }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.base_price') *</label>
-                            <input type="number" name="base_price" class="form-control" value="{{ $product->base_price }}" step="0.01" required>
+                            <input type="number" name="base_price" class="form-control" value="{{ old('base_price', $product->base_price) }}" step="0.01" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@lang('messages.products.category')</label>
                             <select name="category_id" class="form-select">
                                 <option value="">-- Select Category --</option>
                                 @foreach(\App\Models\Category::where('is_active', true)->get() as $category)
-                                    <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-12">
                             <label class="form-label">@lang('messages.products.description')</label>
-                            <textarea name="description" class="form-control" rows="3">{{ $product->description }}</textarea>
+                            <textarea name="description" class="form-control" rows="3">{{ old('description', $product->description) }}</textarea>
                         </div>
                         <div class="col-12">
                             <label class="form-label">@lang('messages.products.image')</label>
@@ -67,18 +67,18 @@
                                         <select name="variants[{{ $index }}][size]" class="form-select" required>
                                             <option value="">-- Select Size --</option>
                                             @foreach($sizes as $size)
-                                                <option value="{{ $size }}" {{ $variant->size == $size ? 'selected' : '' }}>{{ $size }}</option>
+                                                <option value="{{ $size }}" {{ old('variants.' . $index . '.size', $variant->size) == $size ? 'selected' : '' }}>{{ $size }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" name="variants[{{ $index }}][color]" class="form-control" value="{{ $variant->color }}" placeholder="Color" required>
+                                        <input type="text" name="variants[{{ $index }}][color]" class="form-control" value="{{ old('variants.' . $index . '.color', $variant->color) }}" placeholder="Color" required>
                                     </div>
                                     <div class="col-md-3">
-                                        <input type="text" name="variants[{{ $index }}][sku]" class="form-control" value="{{ $variant->sku }}" placeholder="Variant SKU" required>
+                                        <input type="text" name="variants[{{ $index }}][sku]" class="form-control" value="{{ old('variants.' . $index . '.sku', $variant->sku) }}" placeholder="Variant SKU" required>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="number" name="variants[{{ $index }}][quantity]" class="form-control" value="{{ $variant->quantity }}" placeholder="Quantity" min="0" required>
+                                        <input type="number" name="variants[{{ $index }}][quantity]" class="form-control" value="{{ old('variants.' . $index . '.quantity', $variant->quantity) }}" placeholder="Quantity" min="0" required>
                                     </div>
                                     <div class="col-md-1">
                                         <input type="hidden" name="variants[{{ $index }}][id]" value="{{ $variant->id }}">
@@ -102,7 +102,7 @@
 
                         <div class="col-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {{ $product->is_active ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {{ old('is_active', $product->is_active) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_active">@lang('messages.products.is_active')</label>
                             </div>
                         </div>
@@ -119,6 +119,19 @@
 
 <script>
 const sizes = @json($sizes);
+
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('imageInput');
+    const currentImageContainer = document.getElementById('currentImageContainer');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    
+    if (imageInput && imageInput.files.length === 0 && currentImageContainer) {
+        currentImageContainer.style.display = 'block';
+    }
+    if (imageInput && imageInput.files.length === 0 && previewContainer) {
+        previewContainer.style.display = 'none';
+    }
+});
 
 document.getElementById('imageInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
