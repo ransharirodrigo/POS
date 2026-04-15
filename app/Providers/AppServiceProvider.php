@@ -21,5 +21,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        
+        view()->share('sizes', ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL']);
     }
 }
