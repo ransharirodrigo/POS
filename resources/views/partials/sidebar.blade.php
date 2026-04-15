@@ -17,7 +17,7 @@
         <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'active' : '' }}"><i class="bi bi-box-seam"></i> @lang('messages.nav.products')</a>
         @endcanany
 
-        <a href="#"><i class="bi bi-cart3"></i> @lang('messages.nav.sales')</a>
+        <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><i class="bi bi-receipt"></i> @lang('messages.nav.sales')</a>
         <a href="#"><i class="bi bi-graph-up"></i> @lang('messages.nav.reports')</a>
         <a href="#"><i class="bi bi-gear"></i> @lang('messages.nav.settings')</a>
     </div>
