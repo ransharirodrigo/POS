@@ -37,7 +37,7 @@
                         <tbody>
                             @forelse($customers as $key => $customer)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $customers->firstItem() + $key }}</td>
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->phone ?? '-' }}</td>
                                     <td>{{ $customer->loyalty_points }}</td>
@@ -74,7 +74,7 @@
                     </table>
                 </div>
                 
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-start">
                     {{ $customers->links() }}
                 </div>
             </div>

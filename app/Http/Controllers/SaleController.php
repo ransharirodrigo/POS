@@ -20,7 +20,7 @@ class SaleController extends Controller
     {
         Gate::authorize('view sales');
         
-        $sales = Sale::with(['staff', 'customer', 'items'])->orderBy('id', 'desc')->paginate(15);
+        $sales = Sale::with(['staff', 'customer', 'items'])->orderBy('id', 'desc')->paginate(10);
         return view('sales.index', compact('sales'));
     }
 

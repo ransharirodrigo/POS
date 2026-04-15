@@ -37,7 +37,7 @@
                         <tbody>
                             @forelse($products as $key => $product)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $products->firstItem() + $key }}</td>
                                     <td>
                                         @if($product->image)
                                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="max-width: 50px; max-height: 50px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $product->id }}">
@@ -85,6 +85,10 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                
+                <div class="d-flex justify-content-start">
+                    {{ $products->links() }}
                 </div>
             </div>
         </div>

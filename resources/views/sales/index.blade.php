@@ -34,7 +34,7 @@
                         <tbody>
                             @forelse($sales as $key => $sale)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $sales->firstItem() + $key }}</td>
                                     <td>{{ $sale->created_at->format('d-m-Y H:i') }}</td>
                                     <td>{{ str_pad($sale->id, 6, '0', STR_PAD_LEFT) }}</td>
                                     <td>{{ $sale->staff->fullName ?? '-' }}</td>
@@ -58,7 +58,7 @@
                     </table>
                 </div>
                 
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-start">
                     {{ $sales->links() }}
                 </div>
             </div>

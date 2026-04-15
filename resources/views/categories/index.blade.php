@@ -34,7 +34,7 @@
                         <tbody>
                             @forelse($categories as $key => $category)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $categories->firstItem() + $key }}</td>
                                     <td>{{ $category->name }}</td>
                                     <td>{{ $category->description ?? '-' }}</td>
                                     <td>
@@ -64,7 +64,10 @@
                             @endforelse
                         </tbody>
                     </table>
-                    {{ $categories->links() }}
+                    </div>
+                    <div class="d-flex justify-content-start mt-3">
+                        {{ $categories->links() }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index()
     {
         Gate::authorize('product view');
-        $products = Product::with('variants')->orderBy('id', 'desc')->get();
+        $products = Product::with('variants')->orderBy('id', 'desc')->paginate(10);
         return view('products.index', compact('products'));
     }
 
