@@ -162,7 +162,7 @@ class ProductController extends Controller
                         ->first();
 
                     if ($existingVariant) {
-                        // Just update the existing one silently
+                    
                         $existingVariant->update([
                             'sku' => $variantData['sku'],
                             'price' => $validated['base_price'],
@@ -170,7 +170,7 @@ class ProductController extends Controller
                         ]);
                         $incomingIds[] = $existingVariant->id;
                     } else {
-                        // Truly new variant — create it
+                    
                         $newVariant = $product->variants()->create([
                             'size' => $variantData['size'],
                             'color' => $variantData['color'],

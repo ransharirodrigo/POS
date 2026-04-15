@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">@lang('messages.products.image')</label>
-                            <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                            <input type="file" name="image" class="form-control" accept="image/*">
                             <small class="text-muted">Max: 2MB (JPEG, PNG, JPG, GIF)</small>
                             <div id="imagePreviewContainer" class="mt-2" style="display: none;">
                                 <img id="imagePreview" src="" alt="Product Image" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover;">
@@ -105,7 +105,7 @@
 <script>
 const sizes = @json($sizes);
 
-document.getElementById('imageInput').addEventListener('change', function(event) {
+document.querySelector('input[name="image"]').addEventListener('change', function(event) {
     const file = event.target.files[0];
     const previewContainer = document.getElementById('imagePreviewContainer');
     const preview = document.getElementById('imagePreview');
