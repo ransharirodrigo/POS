@@ -17,7 +17,8 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h6 class="text-muted mb-1">@lang('messages.dashboard.todays_sales')</h6>
-                        <h3 class="mb-0">$1,234</h3>
+                        <h3 class="mb-0">Rs.{{ number_format($todayRevenue, 2) }}</h3>
+                        <small class="text-muted">{{ $todaySales }} orders</small>
                     </div>
                     <div class="stat-icon stat-icon-primary"><i class="bi bi-currency-dollar"></i></div>
                 </div>
@@ -27,10 +28,11 @@
             <div class="stat-card">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h6 class="text-muted mb-1">@lang('messages.dashboard.orders')</h6>
-                        <h3 class="mb-0">45</h3>
+                        <h6 class="text-muted mb-1">This Month</h6>
+                        <h3 class="mb-0">Rs.{{ number_format($monthRevenue, 2) }}</h3>
+                        <small class="text-muted">{{ $monthSales }} orders</small>
                     </div>
-                    <div class="stat-icon stat-icon-success"><i class="bi bi-bag-check"></i></div>
+                    <div class="stat-icon stat-icon-success"><i class="bi bi-graph-up"></i></div>
                 </div>
             </div>
         </div>
@@ -39,7 +41,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h6 class="text-muted mb-1">@lang('messages.dashboard.products')</h6>
-                        <h3 class="mb-0">128</h3>
+                        <h3 class="mb-0">{{ $totalProducts }}</h3>
                     </div>
                     <div class="stat-icon stat-icon-warning"><i class="bi bi-box-seam"></i></div>
                 </div>
@@ -50,7 +52,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h6 class="text-muted mb-1">@lang('messages.dashboard.customers')</h6>
-                        <h3 class="mb-0">89</h3>
+                        <h3 class="mb-0">{{ $totalCustomers }}</h3>
                     </div>
                     <div class="stat-icon stat-icon-info"><i class="bi bi-people"></i></div>
                 </div>
@@ -75,27 +77,27 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($recentSales as $sale)
                             <tr>
-                                <td>#ORD-001</td>
-                                <td>John Doe</td>
-                                <td>Apr 14, 2026</td>
-                                <td>$45.00</td>
-                                <td><span class="badge bg-success">@lang('messages.dashboard.completed')</span></td>
+                                <td>#{{ str_pad($sale->id, 6, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ $sale->customer->name ?? 'Walk-in' }}</td>
+                                <td>{{ $sale->created_at->format('M d, Y') }}</td>
+                                <td>Rs.{{ number_format($sale->total, 2) }}</td>
+                                <td>
+                                    @if($sale->status === 'completed')
+                                    <span class="badge bg-success">@lang('messages.dashboard.completed')</span>
+                                    @elseif($sale->status === 'pending')
+                                    <span class="badge bg-warning">@lang('messages.dashboard.pending')</span>
+                                    @else
+                                    <span class="badge bg-danger">Cancelled</span>
+                                    @endif
+                                </td>
                             </tr>
+                            @empty
                             <tr>
-                                <td>#ORD-002</td>
-                                <td>Jane Smith</td>
-                                <td>Apr 14, 2026</td>
-                                <td>$120.00</td>
-                                <td><span class="badge bg-success">@lang('messages.dashboard.completed')</span></td>
+                                <td colspan="5" class="text-center text-muted">No recent sales</td>
                             </tr>
-                            <tr>
-                                <td>#ORD-003</td>
-                                <td>Mike Johnson</td>
-                                <td>Apr 14, 2026</td>
-                                <td>$75.00</td>
-                                <td><span class="badge bg-warning">@lang('messages.dashboard.pending')</span></td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -104,22 +106,14 @@
         <div class="col-lg-4">
             <div class="stat-card">
                 <h6 class="mb-3">@lang('messages.dashboard.top_products')</h6>
+                @forelse($topProducts as $product)
                 <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                    <span>Cotton Shirt</span>
-                    <span class="badge bg-primary">45 sold</span>
+                    <span>{{ $product->product_name }}</span>
+                    <span class="badge bg-primary">{{ $product->total_sold }} sold</span>
                 </div>
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                    <span>Linen Pants</span>
-                    <span class="badge bg-primary">32 sold</span>
-                </div>
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                    <span>Silk Dress</span>
-                    <span class="badge bg-primary">28 sold</span>
-                </div>
-                <div class="d-flex align-items-center justify-content-between py-2">
-                    <span>Wool Sweater</span>
-                    <span class="badge bg-primary">18 sold</span>
-                </div>
+                @empty
+                <p class="text-muted text-center py-3">No sales data</p>
+                @endforelse
             </div>
         </div>
     </div>
