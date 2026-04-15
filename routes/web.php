@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -40,6 +41,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customers.index')->middleware('permission:customer view|customer manage');
+        Route::post('/', [CustomerController::class, 'store'])->name('customers.store')->middleware('permission:customer add|customer manage');
+        Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update')->middleware('permission:customer update|customer manage');
+        Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy')->middleware('permission:customer delete|customer manage');
     });
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
