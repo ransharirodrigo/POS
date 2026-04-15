@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\HasSalesCheck;
+use App\Http\Controllers\Traits\CanDelete;
 use App\Http\Controllers\Traits\ImageUploadTrait;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
-    use ImageUploadTrait, HasSalesCheck;
+    use ImageUploadTrait, CanDelete;
 
     public function index()
     {
@@ -197,14 +197,14 @@ class ProductController extends Controller
     {
         Gate::authorize('product delete');
         
-        return $this->deleteIfNoSales(
+        return $this->deleteWithQuery(
             $product,
-            'products.index',
-            'products',
-            __('messages.products.deleted'),
             function ($model) {
                 return $model->saleItems();
             },
+            'products.index',
+            'products',
+            __('messages.products.deleted'),
             function ($model) {
                 $this->deleteImage($model->image, 'public');
             }

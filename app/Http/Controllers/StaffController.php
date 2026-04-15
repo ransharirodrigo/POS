@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\HasSalesCheck;
+use App\Http\Controllers\Traits\CanDelete;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller
 {
-    use HasSalesCheck;
+    use CanDelete;
     public function index()
     {
         $employees = Employee::where('role', '!=', 'super admin')->orderBy('id', 'desc')->paginate(10);
@@ -80,6 +80,6 @@ class StaffController extends Controller
 
     public function destroy(Employee $employee)
     {
-        return $this->deleteIfNoSales($employee, 'staff.index', 'staff', __('messages.staff.deleted'));
+        return $this->deleteIfNoRelated($employee, 'sales', 'staff.index', 'staff', __('messages.staff.deleted'));
     }
 }

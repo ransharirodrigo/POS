@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CanDelete;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
+    use CanDelete;
     public function index()
     {
         Gate::authorize('category view');
@@ -53,7 +55,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         Gate::authorize('category delete');
-        $category->delete();
-        return redirect()->route('categories.index')->with('success', __('messages.categories.deleted'));
+        
+        return $this->deleteIfNoRelated($category, 'products', 'categories.index', 'categories', __('messages.categories.deleted'));
     }
 }

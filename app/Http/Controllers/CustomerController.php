@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\HasSalesCheck;
+use App\Http\Controllers\Traits\CanDelete;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
-    use HasSalesCheck;
+    use CanDelete;
 
     public function index()
     {
@@ -83,6 +83,6 @@ class CustomerController extends Controller
     {
         Gate::authorize('customer delete');
 
-        return $this->deleteIfNoSales($customer, 'customers.index', 'customers', __('messages.customers.deleted'));
+        return $this->deleteIfNoRelated($customer, 'sales', 'customers.index', 'customers', __('messages.customers.deleted'));
     }
 }

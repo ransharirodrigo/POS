@@ -123,6 +123,7 @@ return [
         'created' => 'Category created successfully.',
         'updated' => 'Category updated successfully.',
         'deleted' => 'Category deleted successfully.',
+        'cannot_delete' => 'Cannot delete category with existing products.',
         'confirm_delete_title' => 'Confirm Delete',
         'confirm_delete_message' => 'Are you sure you want to delete :name? This action cannot be undone.',
         'no_categories' => 'No categories found.',
