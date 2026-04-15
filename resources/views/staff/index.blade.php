@@ -58,7 +58,7 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteStaff({{ $employee->id }}, '{{ $employee->first_name }} {{ $employee->last_name }}')">
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $employee->id }}, '{{ $employee->first_name }} {{ $employee->last_name }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>

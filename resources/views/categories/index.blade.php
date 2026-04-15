@@ -52,7 +52,7 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteCategory({{ $category->id }}, '{{ $category->name }}')">
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $category->id }}, '{{ $category->name }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>

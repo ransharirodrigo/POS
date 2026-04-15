@@ -43,23 +43,11 @@ function showDeleteConfirm(title, message, onConfirm) {
     }
 }
 
-function deleteStaff(id, name) {
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({
-            title: 'Confirm Delete',
-            text: 'Are you sure you want to delete ' + name + '? This action cannot be undone.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form-' + id).submit();
-            }
-        });
-    }
+function confirmDelete(id, name) {
+    const message = 'Are you sure you want to delete ' + name + '? This action cannot be undone.';
+    showDeleteConfirm('Confirm Delete', message, function() {
+        document.getElementById('delete-form-' + id).submit();
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
