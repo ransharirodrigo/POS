@@ -1,11 +1,63 @@
+function renderProducts(filteredProducts = products) {
+    const grid = document.getElementById('productGrid');
+    if (!grid) return;
+    
+    const categoryFilter = document.getElementById('categoryFilter')?.value;
+    const searchTerm = document.getElementById('productSearch')?.value.toLowerCase() || '';
+    
+    let filtered = filteredProducts;
+    if (categoryFilter) {
+        filtered = filtered.filter(p => p.category_id == categoryFilter);
+    }
+    if (searchTerm) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+    }
+    
+    const hasVariants = filtered.some(p => p.variants && p.variants.length > 0);
+    
+    grid.innerHTML = filtered.map(product => {
+        const onClick = (product.variants && product.variants.length) 
+            ? `showVariants(${product.id})` 
+            : `addToCart(${product.id}, null, ${product.base_price}, '${product.name.replace(/'/g, "\\'")}', null, ${product.base_price})`;
+        
+        const hasStock = !product.variants || product.variants.length === 0 || product.variants.some(v => v.quantity > 0);
+        const cardClass = hasStock ? 'product-card' : 'product-card opacity-50';
+        
+        return `
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card ${cardClass} h-100 border-0 shadow-sm rounded-3" onclick="${onClick}" style="${!hasStock ? 'cursor:not-allowed;' : ''}">
+                ${product.image ? `<img src="/storage/${product.image}" class="card-img-top rounded-top-3" alt="${product.name}" style="height: 100px; object-fit: cover;">` : '<div class="product-image-placeholder d-flex align-items-center justify-content-center bg-light rounded-top-3" style="height: 100px;"><i class="bi bi-image text-muted" style="font-size: 2rem;"></i></div>'}
+                <div class="card-body p-2">
+                    <h6 class="card-title mb-1 fw-semibold">${product.name}</h6>
+                    <p class="product-price mb-1 fw-bold">Rs. ${parseFloat(product.base_price).toFixed(2)}</p>
+                    ${product.category ? `<small class="badge bg-light text-dark">${product.category.name}</small>` : ''}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
 function showVariants(productId) {
     const product = products.find(p => p.id === productId);
     if (!product || !product.variants || product.variants.length === 0) return;
     
-    const variantOptions = product.variants.map((v, i) => {
+    const availableVariants = product.variants.filter(v => v.quantity > 0);
+    
+    if (availableVariants.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Out of Stock',
+            text: 'All variants of this product are out of stock.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    
+    const variantOptions = availableVariants.map((v) => {
+        const originalIndex = product.variants.indexOf(v);
         return {
-            text: (v.size || '') + ' ' + (v.color || '') + ' - Rs. ' + parseFloat(v.price).toFixed(2),
-            value: i
+            text: (v.size || '') + ' ' + (v.color || '') + ' - Rs. ' + parseFloat(v.price).toFixed(2) + ' (Stock: ' + v.quantity + ')',
+            value: originalIndex
         };
     });
     
@@ -153,6 +205,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('cartDiscount')?.addEventListener('input', updateTotals);
     document.getElementById('paidAmount')?.addEventListener('input', updateTotals);
     document.getElementById('saleStaff')?.addEventListener('change', updateTotals);
+    document.getElementById('categoryFilter')?.addEventListener('change', renderProducts);
+    document.getElementById('productSearch')?.addEventListener('input', renderProducts);
 
     document.getElementById('completeSale')?.addEventListener('click', async function() {
         const staffId = document.getElementById('saleStaff').value;
@@ -219,6 +273,10 @@ document.addEventListener('DOMContentLoaded', function() {
             renderCart();
             document.getElementById('paidAmount').value = 0;
             updateTotals();
+            if (data.products) {
+                products = data.products;
+                renderProducts();
+            }
         } catch (error) {
             console.error('Error completing sale:', error);
             Swal.fire({

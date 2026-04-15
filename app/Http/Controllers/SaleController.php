@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Sale;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Employee;
@@ -63,6 +64,26 @@ class SaleController extends Controller
                 'items' => 'required|array|min:1',
             ]);
 
+            foreach ($validated['items'] as $item) {
+                $availableQty = 0;
+                $variant = ProductVariant::find($item['variantId']);
+                if (!$variant) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'Invalid product variant selected'
+                    ], 422);
+                }
+                $availableQty = $variant->quantity;
+
+                if ($item['quantity'] > $availableQty) {
+                    $itemName = $item['variantName'] ? $item['productName'] . ' (' . $item['variantName'] . ')' : $item['productName'];
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'Insufficient stock for ' . $itemName . '. Available: ' . $availableQty
+                    ], 422);
+                }
+            }
+
 
             $sale = Sale::create([
                 'staff_id' => $validated['staff_id'],
@@ -87,10 +108,19 @@ class SaleController extends Controller
                     'unit_price' => $item['unitPrice'],
                     'subtotal' => $item['subtotal'],
                 ]);
+
+                $variant = ProductVariant::find($item['variantId']);
+                if ($variant) {
+                    $variant->decrement('quantity', $item['quantity']);
+                }
             }
 
+            $products = Product::with(['category', 'variants'])
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
 
-            return response()->json(['success' => true, 'sale_id' => $sale->id]);
+            return response()->json(['success' => true, 'sale_id' => $sale->id, 'products' => $products]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 422);
         }
