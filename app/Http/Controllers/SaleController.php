@@ -12,6 +12,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
@@ -44,7 +45,9 @@ class SaleController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('pos.index', compact('products', 'categories', 'staff', 'customers'));
+        $loggedInEmployee = Auth::user();
+
+        return view('pos.index', compact('products', 'categories', 'staff', 'customers', 'loggedInEmployee'));
     }
 
     public function store(Request $request)

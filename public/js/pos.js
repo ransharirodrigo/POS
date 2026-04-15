@@ -3,17 +3,11 @@ function renderProducts(filteredProducts = products) {
     if (!grid) return;
     
     const categoryFilter = document.getElementById('categoryFilter')?.value;
-    const searchTerm = document.getElementById('productSearch')?.value.toLowerCase() || '';
     
     let filtered = filteredProducts;
     if (categoryFilter) {
         filtered = filtered.filter(p => p.category_id == categoryFilter);
     }
-    if (searchTerm) {
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
-    }
-    
-    const hasVariants = filtered.some(p => p.variants && p.variants.length > 0);
     
     grid.innerHTML = filtered.map(product => {
         const onClick = (product.variants && product.variants.length) 
@@ -206,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('paidAmount')?.addEventListener('input', updateTotals);
     document.getElementById('saleStaff')?.addEventListener('change', updateTotals);
     document.getElementById('categoryFilter')?.addEventListener('change', renderProducts);
-    document.getElementById('productSearch')?.addEventListener('input', renderProducts);
 
     document.getElementById('completeSale')?.addEventListener('click', async function() {
         const staffId = document.getElementById('saleStaff').value;

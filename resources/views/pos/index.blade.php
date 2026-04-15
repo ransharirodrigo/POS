@@ -20,7 +20,7 @@
                         <select id="saleStaff" class="form-select" required>
                             <option value="">Staff Member</option>
                             @foreach($staff as $s)
-                            <option value="{{ $s->id }}">{{ $s->first_name }} {{ $s->last_name }}</option>
+                            <option value="{{ $s->id }}" {{ $loggedInEmployee && $loggedInEmployee->id == $s->id ? 'selected' : '' }}>{{ $s->first_name }} {{ $s->last_name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -80,15 +80,12 @@
             <div class="stat-card rounded-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam me-2"></i>@lang('messages.pos.products')</h5>
-                    <div class="d-flex gap-2">
-                        <select id="categoryFilter" class="form-select form-select-sm rounded-2" style="width: 150px;">
-                            <option value="">@lang('messages.pos.all_categories')</option>
-                            @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                        <input type="text" id="productSearch" class="form-control form-control-sm rounded-2" placeholder="@lang('messages.pos.search_products')" style="width: 200px;">
-                    </div>
+                    <select id="categoryFilter" class="form-select form-select-sm rounded-2" style="width: 150px;">
+                        <option value="">@lang('messages.pos.all_categories')</option>
+                        @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 
                 <div class="row g-3" id="productGrid">
