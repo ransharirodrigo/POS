@@ -40,6 +40,6 @@ class Employee extends Authenticatable
 
     public function sales()
     {
-        return $this->hasMany(Sale::class);
+        return $this->hasMany(Sale::class, 'staff_id');
     }
 }
