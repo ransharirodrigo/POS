@@ -28,7 +28,9 @@
                                 <th>@lang('messages.categories.name')</th>
                                 <th>@lang('messages.categories.description')</th>
                                 <th>@lang('messages.categories.is_active')</th>
+                                @canany(['category update', 'category delete', 'category manage'])
                                 <th>@lang('messages.categories.actions')</th>
+                                @endcanany
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +46,7 @@
                                             <span class="badge bg-danger">Inactive</span>
                                         @endif
                                     </td>
+                                    @canany(['category update', 'category delete', 'category manage'])
                                     <td>
                                         <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $category->id }}">
                                             <i class="bi bi-pencil"></i>
@@ -56,6 +59,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
+                                    @endcanany
                                 </tr>
                             @empty
                                 <tr>

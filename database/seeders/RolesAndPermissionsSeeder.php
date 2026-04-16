@@ -48,7 +48,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $superAdmin->givePermissionTo(Permission::all());
 
         $manager = Role::firstOrCreate(['name' => 'manager']);
-        $manager->givePermissionTo(['manage sales', 'view sales', 'view reports', 'staff view', 'category manage', 'category add', 'category update', 'category delete', 'category view', 'product manage', 'product add', 'product update', 'product view', 'customer manage', 'customer add', 'customer update', 'customer delete', 'customer view']);
+        $manager->givePermissionTo(['manage sales', 'view sales', 'view reports', 'staff manage', 'staff view', 'category manage', 'category add', 'category update', 'category delete', 'category view', 'product manage', 'product add', 'product update', 'product view', 'customer manage', 'customer add', 'customer update', 'customer delete', 'customer view']);
 
         $cashier = Role::firstOrCreate(['name' => 'cashier']);
         $cashier->givePermissionTo(['manage sales', 'view sales', 'process payments', 'category view', 'product view', 'customer add', 'customer view']);

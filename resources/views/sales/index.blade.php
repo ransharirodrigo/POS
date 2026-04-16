@@ -28,7 +28,9 @@
                                 <th>Customer</th>
                                 <th>Total</th>
                                 <th>Payment</th>
+                                @canany(['view sales', 'manage sales'])
                                 <th>Actions</th>
+                                @endcanany
                             </tr>
                         </thead>
                         <tbody>
@@ -43,11 +45,13 @@
                                     <td>
                                         <span class="badge bg-info">{{ ucfirst($sale->payment_method) }}</span>
                                     </td>
+                                    @canany(['view sales', 'manage sales'])
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#viewModal{{ $sale->id }}">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </td>
+                                    @endcanany
                                 </tr>
                             @empty
                                 <tr>

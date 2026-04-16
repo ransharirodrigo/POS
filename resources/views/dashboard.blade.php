@@ -10,6 +10,7 @@
 <div class="main-content">
     @include('partials.topbar')
 
+    @can('view reports')
     <!-- Stats Row -->
     <div class="row g-4 mb-4">
         <div class="col-6 col-lg-3">
@@ -59,10 +60,11 @@
             </div>
         </div>
     </div>
+    @endcan
 
     <!-- Content Row -->
     <div class="row g-4">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="stat-card">
                 <h6 class="mb-3">@lang('messages.dashboard.recent_sales')</h6>
                 <div class="table-responsive">
@@ -101,19 +103,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="stat-card">
-                <h6 class="mb-3">@lang('messages.dashboard.top_products')</h6>
-                @forelse($topProducts as $product)
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
-                    <span>{{ $product->product_name }}</span>
-                    <span class="badge bg-primary">{{ $product->total_sold }} sold</span>
-                </div>
-                @empty
-                <p class="text-muted text-center py-3">No sales data</p>
-                @endforelse
             </div>
         </div>
     </div>

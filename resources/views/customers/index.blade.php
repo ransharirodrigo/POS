@@ -31,7 +31,9 @@
                                 <th>@lang('messages.customers.phone')</th>
                                 <th>@lang('messages.customers.loyalty_points')</th>
                                 <th>@lang('messages.customers.is_active')</th>
+                                @canany(['customer update', 'customer delete', 'customer manage'])
                                 <th>@lang('messages.customers.actions')</th>
+                                @endcanany
                             </tr>
                         </thead>
                         <tbody>
@@ -48,6 +50,7 @@
                                             <span class="badge bg-danger">Inactive</span>
                                         @endif
                                     </td>
+                                    @canany(['customer update', 'customer delete', 'customer manage'])
                                     <td>
                                         @canany(['customer update', 'customer manage'])
                                         <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $customer->id }}">
@@ -64,6 +67,7 @@
                                         </button>
                                         @endcanany
                                     </td>
+                                    @endcanany
                                 </tr>
                             @empty
                                 <tr>

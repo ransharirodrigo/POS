@@ -31,7 +31,9 @@
                                 <th>@lang('messages.products.base_price')</th>
                                 <th>@lang('messages.products.variants')</th>
                                 <th>@lang('messages.products.is_active')</th>
+                                @canany(['product view', 'product update', 'product delete', 'product manage'])
                                 <th>@lang('messages.products.actions')</th>
+                                @endcanany
                             </tr>
                         </thead>
                         <tbody>
@@ -62,13 +64,17 @@
                                             <span class="badge bg-danger">Inactive</span>
                                         @endif
                                     </td>
+                                    @canany(['product view', 'product update', 'product delete', 'product manage'])
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#viewModal{{ $product->id }}">
                                             <i class="bi bi-eye"></i>
                                         </button>
+                                        @canany(['product update', 'product manage'])
                                         <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-primary me-1">
                                             <i class="bi bi-pencil"></i>
                                         </a>
+                                        @endcanany
+                                        @canany(['product delete', 'product manage'])
                                         <form id="delete-form-{{ $product->id }}" action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -76,7 +82,9 @@
                                         <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $product->id }}, '{{ $product->name }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        @endcanany
                                     </td>
+                                    @endcanany
                                 </tr>
                             @empty
                                 <tr>

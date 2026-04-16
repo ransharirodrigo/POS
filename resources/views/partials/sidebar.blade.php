@@ -4,7 +4,7 @@
     </div>
     <div class="sidebar-menu">
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> @lang('messages.nav.dashboard')</a>
-        @canany(['staff view', 'staff manage'])
+        @canany(['staff manage'])
         <a href="{{ route('staff.index') }}" class="{{ request()->routeIs('staff.*') ? 'active' : '' }}"><i class="bi bi-people"></i> @lang('messages.nav.staff')</a>
         @endcanany
         @canany(['customer view', 'customer manage'])

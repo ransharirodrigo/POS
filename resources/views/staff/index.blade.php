@@ -31,7 +31,9 @@
                                 <th>@lang('messages.staff.phone')</th>
                                 <th>@lang('messages.staff.role')</th>
                                 <th>@lang('messages.staff.is_active')</th>
+                                @canany(['staff update', 'staff delete', 'staff manage'])
                                 <th>@lang('messages.staff.actions')</th>
+                                @endcanany
                             </tr>
                         </thead>
                         <tbody>
@@ -50,6 +52,7 @@
                                             <span class="badge bg-danger">Inactive</span>
                                         @endif
                                     </td>
+                                    @canany(['staff update', 'staff delete', 'staff manage'])
                                     <td>
                                         <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $employee->id }}">
                                             <i class="bi bi-pencil"></i>
@@ -62,6 +65,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
+                                    @endcanany
                                 </tr>
                             @empty
                                 <tr>
