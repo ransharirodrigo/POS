@@ -29,7 +29,6 @@
                                 <th>#</th>
                                 <th>@lang('messages.customers.name')</th>
                                 <th>@lang('messages.customers.phone')</th>
-                                <th>@lang('messages.customers.loyalty_points')</th>
                                 <th>@lang('messages.customers.is_active')</th>
                                 @canany(['customer update', 'customer delete', 'customer manage'])
                                 <th>@lang('messages.customers.actions')</th>
@@ -42,7 +41,6 @@
                                     <td>{{ $customers->firstItem() + $key }}</td>
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->phone ?? '-' }}</td>
-                                    <td>{{ $customer->loyalty_points }}</td>
                                     <td>
                                         @if($customer->is_active)
                                             <span class="badge bg-success">@lang('messages.customers.is_active')</span>
@@ -71,7 +69,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">@lang('messages.customers.no_customers')</td>
+                                    <td colspan="5" class="text-center text-muted">@lang('messages.customers.no_customers')</td>
                                 </tr>
                             @endforelse
                         </tbody>

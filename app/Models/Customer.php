@@ -12,14 +12,12 @@ class Customer extends Model
     protected $fillable = [
         'name',
         'phone',
-        'loyalty_points',
         'is_active',
     ];
 
     protected function casts(): array
     {
         return [
-            'loyalty_points' => 'integer',
             'is_active' => 'boolean',
         ];
     }
