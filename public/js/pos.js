@@ -328,3 +328,123 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function searchCustomer() {
+    const phoneInput = document.getElementById('customerPhone');
+    const customerInfo = document.getElementById('customerInfo');
+    const customerHidden = document.getElementById('saleCustomer');
+    const phone = phoneInput.value.trim();
+    
+    if (phone.length !== 10 || !/^\d+$/.test(phone)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Number',
+            text: 'Please enter a valid 10-digit phone number',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+    
+    fetch(`/customers/search?phone=${encodeURIComponent(phone)}`)
+        .then(response => response.json())
+        .then(data => {
+                if (data.found) {
+                customerInfo.innerHTML = `<i class="bi bi-check-circle me-1"></i> Found: ${data.customer.name}`;
+                customerInfo.className = 'mt-2 text-success small';
+                customerHidden.value = data.customer.id;
+            } else {
+                Swal.fire({
+                    title: 'Customer Not Found',
+                    html: `No customer found with phone: ${phone}<br><br>Would you like to create a new customer?`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Create',
+                    cancelButtonText: 'No',
+                    confirmButtonColor: '#357960'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        createNewCustomer(phone);
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error searching customer:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to search customer',
+                confirmButtonText: 'OK'
+            });
+        });
+}
+
+function createNewCustomer(phone) {
+    Swal.fire({
+        title: 'Create New Customer',
+        html: `
+            <div class="text-start">
+                <label class="form-label">Mobile Number</label>
+                <input type="text" id="newCustomerPhone" class="form-control mb-3" value="${phone}" readonly>
+                <label class="form-label">Customer Name *</label>
+                <input type="text" id="newCustomerName" class="form-control" placeholder="Enter customer name">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Create',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#357960',
+        preConfirm: () => {
+            const name = document.getElementById('newCustomerName').value.trim();
+            if (!name) {
+                Swal.showValidationMessage('Please enter customer name');
+                return false;
+            }
+            return { name: name, phone: phone };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            fetch('/customers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(result.value)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const customerInfo = document.getElementById('customerInfo');
+                    const customerHidden = document.getElementById('saleCustomer');
+                    customerHidden.value = data.customer.id;
+                    customerInfo.innerHTML = `<i class="bi bi-check-circle me-1"></i> Created: ${data.customer.name}`;
+                    customerInfo.className = 'mt-2 text-success small';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Customer Created',
+                        text: `${data.customer.name} has been added successfully`,
+                        confirmButtonText: 'OK',
+                        timer: 2000
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: data.errors?.phone?.[0] || 'Failed to add customer',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error creating customer:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to create customer',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+    });
+}

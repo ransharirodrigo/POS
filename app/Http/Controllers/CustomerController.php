@@ -23,31 +23,28 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        Gate::authorize('customer add');
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:100',
-            'phone' => 'required|string|max:20|unique:customers,phone',
+        $name = $request->input('name');
+        $phone = $request->input('phone');
+        
+        if (empty($name) || empty($phone)) {
+            return response()->json(['success' => false, 'errors' => ['name' => ['Name is required'], 'phone' => ['Phone is required']]], 422);
+        }
+        
+        $exists = Customer::where('phone', $phone)->exists();
+        if ($exists) {
+            return response()->json(['success' => false, 'errors' => ['phone' => ['This phone number already exists']]], 422);
+        }
+        
+        $customer = Customer::create([
+            'name' => $name,
+            'phone' => $phone,
+            'is_active' => true,
         ]);
 
-        if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        Customer::create([
-            'name' => $validator->validated()['name'],
-            'phone' => $validator->validated()['phone'],
-            'is_active' => $request->has('is_active'),
+        return response()->json([
+            'success' => true, 
+            'customer' => ['id' => $customer->id, 'name' => $customer->name, 'phone' => $customer->phone]
         ]);
-
-        if ($request->expectsJson()) {
-            return response()->json(['success' => true, 'message' => __('messages.customers.created')]);
-        }
-
-        return redirect()->route('customers.index')->with('success', __('messages.customers.created'));
     }
 
     public function update(Request $request, Customer $customer)
@@ -84,5 +81,24 @@ class CustomerController extends Controller
         Gate::authorize('customer delete');
 
         return $this->deleteIfNoRelated($customer, 'sales', 'customers.index', 'customers', __('messages.customers.deleted'));
+    }
+
+    public function search(Request $request)
+    {
+        $phone = $request->query('phone');
+        $customer = Customer::where('phone', 'like', "%{$phone}%")->first();
+        
+        if ($customer) {
+            return response()->json([
+                'found' => true,
+                'customer' => [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'phone' => $customer->phone,
+                ]
+            ]);
+        }
+        
+        return response()->json(['found' => false]);
     }
 }

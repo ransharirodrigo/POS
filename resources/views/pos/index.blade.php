@@ -27,12 +27,14 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label fw-semibold">@lang('messages.pos.select_customer')</label>
-                        <select id="saleCustomer" class="form-select rounded-2">
-                            <option value="">@lang('messages.pos.walk_in_customer')</option>
-                            @foreach($customers as $c)
-                            <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->phone }})</option>
-                            @endforeach
-                        </select>
+                        <div class="input-group">
+                            <input type="text" id="customerPhone" class="form-control rounded-start-2" placeholder="Enter mobile number" maxlength="10">
+                            <button type="button" class="btn btn-outline-primary rounded-end-2" onclick="searchCustomer()">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" id="saleCustomer" value="">
+                        <div id="customerInfo" class="mt-2 text-success small"></div>
                     </div>
                 </div>
 
