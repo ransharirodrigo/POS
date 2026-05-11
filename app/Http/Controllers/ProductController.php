@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\CanDelete;
 use App\Http\Controllers\Traits\ImageUploadTrait;
 use App\Models\Product;
@@ -13,18 +12,20 @@ use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
-    use ImageUploadTrait, CanDelete;
+    use CanDelete, ImageUploadTrait;
 
     public function index()
     {
         Gate::authorize('product view');
         $products = Product::with('variants')->orderBy('id', 'desc')->paginate(10);
+
         return view('products.index', compact('products'));
     }
 
     public function create()
     {
         Gate::authorize('product add');
+
         return view('products.create');
     }
 
@@ -58,7 +59,7 @@ class ProductController extends Controller
         ]);
 
         $product = DB::transaction(function () use ($validated, $request) {
-            $imagePath = $this->handleImageUpload($request, null, 'public', 'products');
+            $imagePath = $this->handleImageUpload($request, null, 'local', 'products');
 
             $product = Product::create([
                 'name' => $validated['name'],
@@ -91,6 +92,7 @@ class ProductController extends Controller
     {
         Gate::authorize('product update');
         $product->load('variants');
+
         return view('products.edit', compact('product'));
     }
 
@@ -99,7 +101,7 @@ class ProductController extends Controller
         Gate::authorize('product update');
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:50|unique:products,sku,' . $product->id,
+            'sku' => 'required|string|max:50|unique:products,sku,'.$product->id,
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'base_price' => 'required|numeric|min:0',
@@ -142,7 +144,7 @@ class ProductController extends Controller
                     ? (int) $variantData['id']
                     : null;
 
-                if (!is_null($variantId)) {
+                if (! is_null($variantId)) {
                     $variant = ProductVariant::find($variantId);
                     if ($variant && $variant->product_id === $product->id) {
                         $variant->update([
@@ -155,14 +157,14 @@ class ProductController extends Controller
                         $incomingIds[] = $variant->id;
                     }
                 } else {
-                
+
                     $existingVariant = ProductVariant::where('product_id', $product->id)
                         ->where('size', $variantData['size'])
                         ->where('color', $variantData['color'])
                         ->first();
 
                     if ($existingVariant) {
-                    
+
                         $existingVariant->update([
                             'sku' => $variantData['sku'],
                             'price' => $validated['base_price'],
@@ -170,7 +172,7 @@ class ProductController extends Controller
                         ]);
                         $incomingIds[] = $existingVariant->id;
                     } else {
-                    
+
                         $newVariant = $product->variants()->create([
                             'size' => $variantData['size'],
                             'color' => $variantData['color'],
@@ -185,7 +187,7 @@ class ProductController extends Controller
             }
 
             $toDelete = array_diff($existingIds, $incomingIds);
-            if (!empty($toDelete)) {
+            if (! empty($toDelete)) {
                 ProductVariant::destroy($toDelete);
             }
         });
@@ -196,7 +198,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         Gate::authorize('product delete');
-        
+
         return $this->deleteWithQuery(
             $product,
             function ($model) {
